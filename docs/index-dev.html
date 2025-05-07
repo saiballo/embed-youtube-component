@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+	<meta charset="utf-8">
+	<title>Embed YouTube</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex, nofollow">
+
+	<style>
+		/* embed-youtube::part(poster)
+			{
+				object-fit: contain;
+			}
+
+			embed-youtube::part(play-button)
+			{
+				margin-block: 1rem;
+			} */
+	</style>
+
+	<script type="module" src="../src/js/embed-youtube.js"></script>
+	<!-- <script defer src="./assets/js/embed-youtube.min.js" data-autoplay></script> -->
+
+	<script>
+		document.addEventListener("embedYoutubeLoaded", (e) => {
+			console.log(e.target);
+			console.log("VideoId:", e.detail.videoId, "PlayListId:", e.detail.playlistId, "videoTitle:", e.detail.videoTitle, "posterUrl:", e.detail.posterUrl);
+		});
+	</script>
+
+</head>
+
+<body>
+
+	<!-- video container -->
+	<div style="width:100%; max-width:600px">
+		<embed-youtube id="myVideo1" video-id="kTwPG53ZAIg" video-title="my video" autopause></embed-youtube>
+	</div>
+	<!-- video container -->
+
+	<br>
+
+	<!-- video container -->
+	<div style="width:100%; max-width:600px">
+		<embed-youtube id="myVideo2" video-id="SqHrqKedtco" video-title="my second video"></embed-youtube>
+	</div>
+	<!-- video container -->
+
+
+	<script>
+
+		// setTimeout(() => {
+		// 	const videoEl = document.getElementById("myVideo1");
+		// 	videoEl.setAttribute("video-id", "dQw4w9WgXcQ");
+		// 	videoEl.setAttribute("poster-fallback", "");
+		// 	console.log("video aggiornato");
+		// }, 2000);
+
+
+		// setTimeout(() => {
+		// 	const videoEl = document.getElementById("myVideo1");
+		// 	videoEl.removeAttribute("poster-fallback");
+		// 	console.log("videoid aggiornato dopo 3 secondi");
+		// }, 6000);
+
+
+		// setTimeout(() => {
+		// 	const videoEl = document.getElementById("myVideo2");
+		// 	videoEl.setAttribute("video-id", "9OUjnbu-BEc"); // nuovo video ID (Rickroll 😄)
+		// 	videoEl.setAttribute("video-title", "daje2"); // nuovo video ID (Rickroll 😄)
+		// 	videoEl.removeAttribute("poster-url")
+		// 	console.log("videoid aggiornato dopo 3 secondi");
+		// }, 4000);
+
+	</script>
+</body>
+
+</html>

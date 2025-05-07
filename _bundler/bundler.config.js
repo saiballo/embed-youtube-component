@@ -15,7 +15,7 @@
 
 const config = {
 	// path cartella dist per file html, img, css, js etc etc. no slash finale
-	"outputDir": "./dist",
+	"outputDir": "./docs",
 	// path cartella assets. va sempre dentro dist. no slash iniziale o finale
 	"outputDirAssets": "assets",
 	// path cartella dentro outputDir/outputDirAssets per file css. no slash iniziale o finale

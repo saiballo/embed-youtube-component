@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 06/05/2025 (17:51:08)
+* Last update: 07/05/2025 (16:39:02)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -204,6 +204,8 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 			// custom fallback svg
 			if (this.posterFallback) {
 
+				console.log("ciao");
+
 				this.setPosterFallback();
 
 			// imposto il custom poster
@@ -374,6 +376,10 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 				<path transform="translate(0,-30)" d="M263.333,232H89v1 c0,4.143-3.357,7.5-7.5,7.5 S74,237.143,74,233v-1 H30.333 c-4.143,0-7.5-3.357-7.5-7.5 s3.357-7.5,7.5-7.5h44 c0-4.143,3.357-7.5,7.5-7.5 s7.5,3.357,7.5,7.5h174 c4.143,0,7.5,3.357,7.5,7.5 S267.476,232,263.333,232z" fill="white"/> <text x="147" y="95" fill="white" font-family="Verdana, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" alignment-baseline="middle">Play video</text>
 				</svg>
 			`;
+
+			// rimuovo eventuali immagini webp e jpg
+			this.domPosterContainer.querySelector("#img-webp").remove()
+			this.domPosterContainer.querySelector("#img-jpg").remove();
 
 			const uri = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 
