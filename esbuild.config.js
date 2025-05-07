@@ -16,6 +16,7 @@
 const esbuild = require("esbuild");
 const fg = require("fast-glob");
 const path = require("node:path");
+const { minifyTemplates, writeFiles } = require("esbuild-minify-templates");
 const { replace } = require("esbuild-plugin-replace");
 
 // conf import e utils
@@ -82,11 +83,17 @@ const buildFile = async (entrypath) => {
 		"sourcemap": needMap,
 		"legalComments": bundleConf.removeLegalComments ? "none" : "inline",
 		"target": "es2015",
+		// necessario per far funzionare minifyTemplate per i css
+		"write": false,
 		"plugins": [
 			replace({
 				"values": bundleUtil.getAllEnvironmentVar(),
 				"preventAssignment": true
-			})
+			}),
+			// il plugin serve per minificare i template css dentro i js cosa che non fa esbuild di default
+			...(bundleConf.isProduction ? [minifyTemplates()] : []),
+			// al posto di write di esbuild metto il plugin writeFiles che scrive i file minificati
+			writeFiles()
 		]
 	})
 };
