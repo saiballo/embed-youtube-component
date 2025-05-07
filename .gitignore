@@ -2,5 +2,5 @@ node_modules/
 cache/
 !cache/.empty
 *.min.js.map
-/dist/index-dev.html
+/docs/index-dev.html
 
