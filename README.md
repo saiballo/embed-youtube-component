@@ -21,6 +21,7 @@ Lo script si ispira all'ottimo codice [lite-youtube di justinribeiro](https://gi
 - [Utilizzo web component](#utilizzo-web-component)
 - [Lista parametri](#lista-parametri)
 - [Configurazione di default](#configurazione-di-default)
+- [GDPR](#gdpr)
 - [Eventi](#eventi)
 - [Stili CSS](#stili-css)
 - [DevTeam](#devteam)
@@ -272,6 +273,16 @@ Alcuni parametri di default, nella maggior parte dei casi sono testi, possono es
 		"posterQuality": "hqdefault"
 	};
 </script>
+```
+
+### GDPR
+
+Per essere completamente aderenti alla normativa GDPR (quando l'utente non ha ancora dato il consenso o lo ha rifiutato) è necessario non utilizzare **mai** il parametro "autoload" e non scaricare mai le immagini dal sito YouTube. Per esempio questi 2 component sono validi anche senza consenso:
+
+```
+<embed-youtube video-id="kTwPG53ZAIg" poster-url="path/to/custom-poster.jpg"></embed-youtube>
+
+<embed-youtube video-id="kTwPG53ZAIg" poster-fallback></embed-youtube>
 ```
 
 ### Eventi
