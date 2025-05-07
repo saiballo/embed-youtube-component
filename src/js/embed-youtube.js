@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 07/05/2025 (18:07:45)
+* Last update: 07/05/2025 (18:10:54)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -376,8 +376,8 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 			`;
 
 			// rimuovo eventuali immagini webp e jpg
-			this.domPosterContainer.querySelector("#img-webp").remove()
-			this.domPosterContainer.querySelector("#img-jpg").remove();
+			this.domPosterContainer.querySelector("#img-webp")?.remove()
+			this.domPosterContainer.querySelector("#img-jpg")?.remove();
 
 			const uri = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 
