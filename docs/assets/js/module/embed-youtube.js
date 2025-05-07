@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 07/05/2025 (16:39:02)
+* Last update: 07/05/2025 (18:07:45)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -203,8 +203,6 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 
 			// custom fallback svg
 			if (this.posterFallback) {
-
-				console.log("ciao");
 
 				this.setPosterFallback();
 
