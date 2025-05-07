@@ -14,6 +14,7 @@ Lo script si ispira all'ottimo codice [lite-youtube di justinribeiro](https://gi
 
 ## Sommario
 
+- [Demo](#demo)
 - [Caratteristiche](#caratteristiche)
 - [Installazione](#installazione)
 - [Parametri globali](#parametri-globali)
@@ -24,6 +25,10 @@ Lo script si ispira all'ottimo codice [lite-youtube di justinribeiro](https://gi
 - [Stili CSS](#stili-css)
 - [DevTeam](#devteam)
 - [Licenza](#license)
+
+## Demo
+
+[Pagina demo](https://saiballo.github.io/embed-youtube-component/)
 
 ## Caratteristiche
 
