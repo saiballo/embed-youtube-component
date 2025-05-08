@@ -1,4 +1,4 @@
-# Embed Youtube Web Component
+# Embed YouTube Web Component
 
 > Un webcomponent per includere video YouTube nel proprio sito rispettando la normativa GDPR. Impostando alcuni parametri specifici è possibile non scaricare nulla dai server Google fin quando l'utente non clicca Play sul video.
 >
@@ -177,12 +177,12 @@ Questo potrebbe interferire con alcuni attributi come "autoload" e "autoplay" ch
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">video-title</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Indica il titolo del video. Viene utilizzato sul testo del bottone e nello snippet di Schema.org.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">"Video Youtube"</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">"Video YouTube"</td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">description</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">La descrizione del video. Viene utilizzato nello snippet di Schema.org.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">"Guarda questo video incorporato nel sito da Youtube"</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">"Guarda questo video incorporato nel sito da YouTube"</td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">play-text</td>
@@ -259,13 +259,13 @@ Questo potrebbe interferire con alcuni attributi come "autoload" e "autoplay" ch
 
 ### Configurazione di default
 
-Alcuni parametri di default, nella maggior parte dei casi sono testi, possono essere sovrascritti creando una variabile globale chiamata "embedYouTubeConfig". La lista dei parametri che possono essere sovrascritti è la seguente:
+Alcuni parametri di default, nella maggior parte dei casi sono testi, possono essere sovrascritti creando una variabile globale chiamata "embedYoutubeConfig". La lista dei parametri che possono essere sovrascritti è la seguente:
 
 ```
 <script>
-	window.embedYouTubeConfig = {
-		"textVideoTitle": "Video Youtube",
-		"textVideoDescription": "Guarda questo video incorporato nel sito da Youtube",
+	window.embedYoutubeConfig = {
+		"textVideoTitle": "Video YouTube",
+		"textVideoDescription": "Guarda questo video incorporato nel sito da YouTube",
 		"textMissingVideoId": "ID video mancante",
 		"textBtn": "Riproduci",
 		"textVideo": "video",

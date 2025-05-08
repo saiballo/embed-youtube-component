@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 07/05/2025 (18:10:54)
+* Last update: 08/05/2025 (12:45:21)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -33,7 +33,7 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 			// merge della possibile configurazione globale con quella di default
 			this.config = {
 				...defaultConfig,
-				...window.embedYouTubeConfig || {}
+				...window.embedYoutubeConfig || {}
 			};
 
 			this.scheduleUpdate;
