@@ -52,7 +52,7 @@ Lo script si ispira all'ottimo codice [lite-youtube di justinribeiro](https://gi
 
 2) Script in pagina del file sorgente con type "module". In questo caso non sarà possibile aggiungere data-* allo script come parametri globali ma potrà essere raggiunto lo stesso risultato aggiungendoli al tag **body** della vostra pagina.
 
-**N.B.** Utilizzando il file come modulo è necessario mettere nella stesso path del file anche la cartella "include". (vedi cartella /dist/assets/js/module)
+**N.B.** Utilizzando il file come modulo è necessario mettere nella stesso path del file anche la cartella "include". (vedi cartella /docs/assets/js/module)
 ```
 <script type="module" src="module/embed-youtube.js"></script>
 ```

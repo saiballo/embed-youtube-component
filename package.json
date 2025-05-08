@@ -1,5 +1,5 @@
 {
-	"name": "embed youtube component",
+	"name": "embed-youtube-component",
 	"version": "1.0.0",
 	"description": "Boilerplate per lo sviluppo di prototipi statici. SASS e Esbuild si occupano di gestire la compilazione dei file css e javascript attraverso Gulp come task runner.",
 	"author": {
@@ -29,10 +29,10 @@
 		"compile:build": "cross-env NODE_ENV=production NODE_PREPROS=false gulp build && gulp copyEmbedYoutube && npm run gulp:assets:size",
 		"build": "npm run compile:build && npm run gulp:assets:rev",
 		"serve": "cross-env NODE_PREPROS=false NODE_ONLY_SERVE=true gulp serveStandalone",
-		"clean": "rm -rf ./dist/assets/css/* ./dist/assets/js/* ./dist/*.html",
-		"clean:css": "rm -rf ./dist/assets/css/*",
-		"clean:js": "rm -rf ./dist/assets/js/*",
-		"clean:all": "echo 'Sei sicuro di voler cancellare tutta la directory dist? [s/N]' && read -r risposta && [[ \"$risposta\" =~ ^[Ss]$ ]] && rm -rf dist || echo 'Operazione annullata'"
+		"clean": "rm -rf ./docs/assets/css/* ./docs/assets/js/* ./docs/*.html",
+		"clean:css": "rm -rf ./docs/assets/css/*",
+		"clean:js": "rm -rf ./docs/assets/js/*",
+		"clean:all": "echo 'Sei sicuro di voler cancellare tutta la directory docs? [s/N]' && read -r risposta && [[ \"$risposta\" =~ ^[Ss]$ ]] && rm -rf docs || echo 'Operazione annullata'"
 	},
 	"devDependencies": {
 		"autoprefixer": "^10.4.21",
