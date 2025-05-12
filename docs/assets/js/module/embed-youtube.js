@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 08/05/2025 (12:45:21)
+* Last update: 12/05/2025 (10:37:49)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -15,7 +15,7 @@
 
 import { defaultConfig } from "./include/config.js";
 import { initShadowDom } from "./include/initShadowDom.js";
-import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
+import { preloadConnection, injectSchema, setLabel, hideElem, missingVideoId } from "./include/util.js";
 
 (() => {
 
@@ -51,17 +51,7 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 		connectedCallback() {
 
 			// se non c'è l'id del video allora non carico il component
-			if (!this.videoId || this.videoId === "") {
-
-				this.domContainer.textContent = "";
-
-				const h2 = document.createElement("h2");
-				h2.id = "error-message";
-				h2.textContent = this.config.textMissingVideoId;
-				this.domContainer.appendChild(h2);
-
-				return false;
-			}
+			if (missingVideoId(this)) return;
 
 			// setup del componente
 			this.setupComponent();
@@ -82,28 +72,6 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 				"once": true
 			});
 		}
-
-		// attributi globali
-		get globalAutoLoad() {
-			return this.globalParam.hasAttribute("data-autoload");
-		}
-
-		get globalAutoPlay() {
-			return this.globalParam.hasAttribute("data-autoplay");
-		}
-
-		get globalAutoPause() {
-			return this.globalParam.hasAttribute("data-autopause");
-		}
-
-		get globalNoPreconnect() {
-			return this.globalParam.hasAttribute("data-no-preconnect");
-		}
-
-		get globalNoSchema() {
-			return this.globalParam.hasAttribute("data-no-schema");
-		}
-		// attributi globali
 
 		// get attributi locali del component
 		get videoId() {
@@ -132,7 +100,7 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 		}
 
 		get autoLoadMargin() {
-			return this.getAttribute("autoload-margin");
+			return this.getAttribute("autoload-margin") || "0px";
 		}
 
 		get posterUrl() {
@@ -152,33 +120,33 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 		}
 		// get attributi locali del component
 
-		// has attributi locali del component
+		// has attributi locali del component- a che servono se non li uso?
 		get autoLoad() {
-			return this.hasAttribute("autoload");
+			return this.hasAttribute("autoload") || this.globalParam.hasAttribute("data-autoload");
 		}
 
 		get autoPlay() {
-			return this.hasAttribute("autoplay");
+			return this.hasAttribute("autoplay") || this.globalParam.hasAttribute("data-autoplay");
 		}
 
 		get autoPause() {
-			return this.hasAttribute("autopause");
+			return this.hasAttribute("autopause") || this.globalParam.hasAttribute("data-autopause");
 		}
 
 		get noCookie() {
-			return this.hasAttribute("no-cookie");
+			return this.hasAttribute("no-cookie") || this.globalParam.hasAttribute("data-no-no-cookie")
+		}
+
+		get noSchema() {
+			return this.hasAttribute("no-schema") || this.globalParam.hasAttribute("data-no-schema");
+		}
+
+		get noPreconnect() {
+			return this.hasAttribute("no-preconnect") || this.globalParam.hasAttribute("data-no-preconnect");
 		}
 
 		get noLazyLoad() {
 			return this.hasAttribute("no-lazyload");
-		}
-
-		get noSchema() {
-			return this.hasAttribute("no-schema");
-		}
-
-		get noPreconnect() {
-			return this.hasAttribute("no-preconnect");
 		}
 
 		get posterFallback() {
@@ -199,7 +167,12 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 			this.setAttribute("title", label);
 			// ottimizzazione per quando viene impostato il poster-url esternamente dopo il caricamento del component. evita un effetto fout
 			this.domImgPoster.src = "";
-			this.domPlayButton.hidden = false;
+
+			// rimuovo attributo lazy se necessario
+			if (this.noLazyLoad) {
+
+				this.domImgPoster.removeAttribute("loading");
+			}
 
 			// custom fallback svg
 			if (this.posterFallback) {
@@ -218,19 +191,19 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 			}
 
 			// autocaricamento iframe
-			if (this.autoLoad || this.globalAutoLoad || this.isYouTubeShort()) {
+			if (this.autoLoad || this.isYouTubeShort()) {
 
 				this.autoLoadIframe();
 			}
 
 			// autopausa
-			if (this.autoPause || this.globalAutoPause) {
+			if (this.autoPause) {
 
 				this.autoPauseVideo();
 			}
 
 			// creazione schema json per seo
-			if (!this.noSchema && !this.globalNoSchema) {
+			if (!this.noSchema) {
 
 				injectSchema(this);
 			}
@@ -256,21 +229,32 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 			} else {
 
 				// gestione parametri
-				const enableApi = this.autoPlay || this.globalAutoPlay || this.autoPause || this.globalAutoPause || this.isYouTubeShort() ? 1 : 0;
-				const autoplay = (this.autoPlay || this.globalAutoPlay) && (this.autoLoad || this.globalAutoLoad) ? 1 : 0;
+				const enableApi = this.autoPlay || this.autoPause || this.isYouTubeShort() ? 1 : 0;
+				const autoplay = this.autoLoad && !this.autoPlay ? 0 : 1;
 				const mute = autoplay ? 1 : 0;
 				const startAt = this.videoStartAt;
 
-				videoParam = `enablejsapi=${enableApi}&start=${startAt}`;
+				console.log(mute);
 
-				if (autoplay) {
+				// da riscrivere?
+				videoParam = `enablejsapi=${enableApi}&autoplay=${autoplay}&start=${startAt}`;
 
-					videoParam = `${videoParam}&autoplay=${autoplay}&mute=${mute}`;
+				if (autoplay && this.autoLoad) {
+
+					videoParam = `${videoParam}&mute=1`;
+					// videoParam = `${videoParam}&autoplay=1&mute=1`;
 
 				} else {
 
-					videoParam = `${videoParam}&autoplay=1&mute=0`;
+					videoParam = `${videoParam}&mute=0`;
 				}
+
+				console.log(autoplay);
+				console.log(videoParam);
+
+				//enablejsapi=1&start=0&autoplay=1&mute=0 senza param o solo autoplay
+				// enablejsapi=1&start=0&autoplay=0&mute=0 solo autoload
+				// enablejsapi=1&start=0&autoplay=1&mute=1 tutti e due
 
 				if (this.isYouTubeShort()) {
 
@@ -319,7 +303,7 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 
 			const options = {
 				"root": null,
-				"rootMargin": this.autoLoadMargin && this.autoLoadMargin !== "" ? this.autoLoadMargin : "0px",
+				"rootMargin": this.autoLoadMargin,
 				"threshold": 0
 			};
 
@@ -369,23 +353,32 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 
 			const svg = `
 				<svg part="poster-fallback" xmlns="http://www.w3.org/2000/svg" viewBox="0 48 294 198" width="294" height="198">
-				<path d="M294,48 c0-8.284-6.716-15-15-15H15 C6.716,33,0,39.716,0,48v198 c0,8.284,6.716,15,15,15h264 c8.284,0,15-6.716,15-15V48z" fill="red"/>
-				<path transform="translate(0,6)" d="M124,113.134 c0-2.68,1.596-5.155,3.917-6.495 c2.32-1.34,5.263-1.34,7.583,0 l37.046,21.364 c2.32,1.34,3.771,3.815,3.771,6.495 s-1.419,5.155-3.74,6.495 l-36.999,21.364 c-1.16,0.67-2.452,1.005-3.747,1.005 s-2.755-0.335-3.915-1.005 c-2.32-1.34-3.915-3.815-3.915-6.495V113.134z" fill="white"/>
-				<path transform="translate(0,-30)" d="M263.333,232H89v1 c0,4.143-3.357,7.5-7.5,7.5 S74,237.143,74,233v-1 H30.333 c-4.143,0-7.5-3.357-7.5-7.5 s3.357-7.5,7.5-7.5h44 c0-4.143,3.357-7.5,7.5-7.5 s7.5,3.357,7.5,7.5h174 c4.143,0,7.5,3.357,7.5,7.5 S267.476,232,263.333,232z" fill="white"/> <text x="147" y="95" fill="white" font-family="Verdana, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" alignment-baseline="middle">Play video</text>
+					<path d="M294,48 c0-8.284-6.716-15-15-15H15 C6.716,33,0,39.716,0,48v198 c0,8.284,6.716,15,15,15h264 c8.284,0,15-6.716,15-15V48z" fill="red"/>
+					<path transform="translate(0,6)" d="M124,113.134 c0-2.68,1.596-5.155,3.917-6.495 c2.32-1.34,5.263-1.34,7.583,0 l37.046,21.364 c2.32,1.34,3.771,3.815,3.771,6.495 s-1.419,5.155-3.74,6.495 l-36.999,21.364 c-1.16,0.67-2.452,1.005-3.747,1.005 s-2.755-0.335-3.915-1.005 c-2.32-1.34-3.915-3.815-3.915-6.495V113.134z" fill="white"/>
+					<path transform="translate(0,-30)" d="M263.333,232H89v1 c0,4.143-3.357,7.5-7.5,7.5 S74,237.143,74,233v-1 H30.333 c-4.143,0-7.5-3.357-7.5-7.5 s3.357-7.5,7.5-7.5h44 c0-4.143,3.357-7.5,7.5-7.5 s7.5,3.357,7.5,7.5h174 c4.143,0,7.5,3.357,7.5,7.5 S267.476,232,263.333,232z" fill="white"/>
+					<text x="147" y="95" fill="white" font-family="Verdana, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">Play video</text>
 				</svg>
 			`;
+
+			// mi serve come semaforo
+			if (!this.getAttribute("poster-fallback")) {
+
+				this.setAttribute("poster-fallback", "");
+			}
+
+			// nascondo il play
+			hideElem(this.domPlayButton, true);
+			this.domPlayButton.setAttribute("aria-hidden", "true");
 
 			// rimuovo eventuali immagini webp e jpg
 			this.domPosterContainer.querySelector("#img-webp")?.remove()
 			this.domPosterContainer.querySelector("#img-jpg")?.remove();
 
+			// imposto l'immagine svg
 			const uri = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
-
 			this.domImgPoster.src = uri;
 			this.domImgPoster.removeAttribute("loading");
 			this.domImgPoster.setAttribute("alt", "");
-			this.domPlayButton.hidden = true;
-			this.domPlayButton.setAttribute("aria-hidden", "true");
 		}
 
 		/**
@@ -393,19 +386,15 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 		 */
 		setPosterCustom() {
 
-			if (this.noLazyLoad) {
-
-				this.domImgPoster.removeAttribute("loading");
-			}
-
 			this.domImgPoster.src = this.posterUrl;
 
 			this.domImgPoster.onload = () => {
 
-				// siccome in setPosterFallback cambio il src e quindi scatta un nuovo load dopo l’error allora faccio un controllo per evitare di sovrascrivere "alt"
-				if (this.domImgPoster.src === this.posterUrl) {
+				if (!this.posterFallback) {
 
 					this.domImgPoster.setAttribute("alt", this.videoTitle);
+
+					hideElem(this.domPlayButton, false);
 				}
 			};
 
@@ -427,17 +416,9 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 			const webpUrl = `https://i.ytimg.com/vi_webp/${this.videoId}/${this.posterQuality}.webp`;
 			const jpgUrl = `https://i.ytimg.com/vi/${this.videoId}/${this.posterQuality}.jpg`;
 
-			// rimuovo attributo lazy se necessario
-			if (this.noLazyLoad) {
-
-				this.domImgPoster.removeAttribute("loading");
-			}
-
 			// test immagine webp perchè se si richiede un file non esistente (es. hqdefault.webp), youtube restituisce una miniatura di default di dimensioni fisse: 120x90px
 			// youtube non restituisce mai 404
 			const img = new Image();
-			img.fetchPriority = "low";
-			img.referrerPolicy = "origin";
 			img.src = webpUrl;
 			// solo dopo img.src scatta onload
 			img.onload = () => {
@@ -465,6 +446,8 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 				this.domPosterContainer.querySelector("#img-webp").srcset = webpUrl;
 				this.domPosterContainer.querySelector("#img-jpg").srcset = jpgUrl;
 				this.domImgPoster.src = jpgUrl;
+
+				hideElem(this.domPlayButton, false);
 			};
 		}
 
@@ -493,7 +476,7 @@ import { preloadConnection, injectSchema, setLabel } from "./include/util.js";
 			const videoId = attrname === "video-id" ? oldvalue : this.videoId;
 
 			// cancello eventuali json. lo faccio sempre perchè non so quale attributo possa essere cambiato. in ogni caso viene richiamata la setup che lo riscrive
-			if (!this.noSchema && !this.globalNoSchema && this.querySelector(`#json-${videoId}`)) {
+			if (!this.noSchema && this.querySelector(`#json-${videoId}`)) {
 
 				this.querySelector(`#json-${videoId}`).remove();
 			}

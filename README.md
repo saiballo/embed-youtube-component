@@ -1,6 +1,6 @@
 # Embed YouTube Web Component
 
-> Un webcomponent per includere video YouTube nel proprio sito rispettando la normativa GDPR. Impostando alcuni parametri specifici è possibile non scaricare nulla dai server Google fin quando l'utente non clicca Play sul video.
+> Un Web Component per includere video YouTube nel proprio sito rispettando la normativa GDPR. Impostando alcuni parametri specifici è possibile non scaricare nulla dai server Google fin quando l'utente non clicca Play sul video.
 >
 >
 
@@ -69,7 +69,7 @@ Sono disponibili i seguenti parametri globali da inserire come data-*:
 * **data-autoload**: istanzia automaticamente l'iframe YouTube per ogni video presente in pagina. GDPR compliant: No.
 * **data-autoplay**: funziona solo se **data-autoload** è impostato. Fa partire il video al caricamento della pagina in modalità muta (obbligatorio). GDPR compliant: No.
 * **data-autopause**: blocca il video quando il player esce dal viewport della pagina (esemmpio: scrollando la pagina).
-* **data-no-preconnect**: Di default vengono inseriti dei tag "preconnect" per le risorse YouTube. Con questo parametro i tag non vengono aggiunti (utile in quei casi in cui i codici sono già presenti nel codice del sito)
+* **data-no-preconnect**: di default vengono inseriti dei tag "preconnect" per le risorse YouTube. Con questo parametro i tag non vengono aggiunti (utile in quei casi in cui i codici sono già presenti nel codice del sito)
 * **data-no-schema**: non stampa lo schema JSON-LD per ogni video. Lo schema è utile sia per finalità SEO che di accessibilità.
 
 Esempio di script con i parametri globali impostati:
@@ -254,6 +254,11 @@ Questo potrebbe interferire con alcuni attributi come "autoload" e "autoplay" ch
 			<td style="border: 1px solid #ddd; padding: 8px;">Se presente farà in modo di visualizzare il video in verticale se la risoluzione è inferiore (o uguale) a 640 pixel</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">non impostato</td>
 		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">spinnerColor</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Indica il colore dello spinner</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">"#ff0000"</td>
+		</tr>
 	</tbody>
 </table>
 
@@ -264,12 +269,14 @@ Alcuni parametri di default, nella maggior parte dei casi sono testi, possono es
 ```
 <script>
 	window.embedYoutubeConfig = {
+		"activeIframeClass": "isactive",
 		"textVideoTitle": "Video YouTube",
 		"textVideoDescription": "Guarda questo video incorporato nel sito da YouTube",
 		"textMissingVideoId": "ID video mancante",
 		"textBtn": "Riproduci",
 		"textVideo": "video",
 		"videoStartAt": 0,
+		"spinnerColor": "#ff0000",
 		"posterQuality": "hqdefault"
 	};
 </script>

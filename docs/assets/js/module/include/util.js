@@ -1,11 +1,10 @@
 /**
-* @preserve
 * Filename: util.js
 *
 * Created: 30/04/2025 (17:20:44)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 06/05/2025 (12:25:13)
+* Last update: 12/05/2025 (11:44:31)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - sss diritti riservati
@@ -59,6 +58,29 @@ export const preloadConnection = (() => {
 })();
 
 /**
+ * The function `missingVideoId` checks if a video ID is provided and displays an error message if it is missing.
+ * @param context - it contains information related to the current state or environment of the application.
+ * @returns it returns a boolean value. It returns `true` if there is no `videoId` in the `context` object or if the `videoId` is an empty string, and it returns `false` otherwise.
+ */
+export const missingVideoId = (context) => {
+
+	// se non c'è l'id del video allora non carico il component
+	if (!context.videoId || context.videoId === "") {
+
+		hideElem(context.shadowRoot.getElementById(context.config.idSpinnerContainer), true);
+
+		const h2 = document.createElement("h2");
+		h2.id = "error-message";
+		h2.textContent = context.config.textMissingVideoId;
+		context.domContainer.appendChild(h2);
+
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * The `injectSchema` function creates a JSON-LD script element for embedding YouTube videos with schema.org metadata.
  * @param context - The `context` parameter in the `injectSchema` function contains the following properties:
  *
@@ -67,11 +89,10 @@ export const preloadConnection = (() => {
 export const injectSchema = (context) => {
 
 	const { config } = context;
-
 	const { videoId } = context;
+
 	const videoTitle = context.videoTitle || config.textVideoTitle;
 	const description = context.description || config.textVideoDescription;
-	const noCookieDomain = context.noCookie ? "-nocookie" : "";
 	const embedTarget = context.playlistId ? `?listType=playlist&list=${context.playlistId}` : `${videoId}`;
 
 	const script = document.createElement("script");
@@ -84,7 +105,7 @@ export const injectSchema = (context) => {
 		"description": `${description}`,
 		"thumbnailUrl": `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
 		"contentUrl": `https://www.youtube.com/watch?v=${videoId}`,
-		"embedUrl": `https://www.youtube${noCookieDomain}.com/embed/${embedTarget}`
+		"embedUrl": `https://www.youtube.com/embed/${embedTarget}`
 	});
 
 	context.prepend(script);
@@ -118,4 +139,23 @@ export const setLabel = (context) => {
 	}
 
 	return `${config.textBtn} ${config.textVideo}`;
+};
+
+/**
+ * `hideElem` that takes a boolean parameter `hide`. Inside the function, it checks the value of `hide`.
+ * If `hide` is true, it sets the `hidden` property of the `domPlayButton` element to true, effectively hiding the play button.
+ * If `hide` is false, it sets a timeout of 250 milliseconds before setting the `hidden` property of the `domPlayButton` element to false
+ */
+export const hideElem = (btn, hide = true, timeout = 250) => {
+
+	if (hide) {
+
+		btn.hidden = true;
+
+	} else {
+
+		setTimeout(() => {
+			btn.hidden = false;
+		}, timeout);
+	}
 };
