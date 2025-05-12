@@ -344,6 +344,12 @@ Due elementi del component sono disponibili per eventuali personalizzazioni CSS:
 	{
 		margin-block: 1rem;
 	}
+
+	/* spinner color */
+	embed-youtube::part(spinner)
+	{
+		display: none;
+	}
 </style>
 ```
 
