@@ -8,10 +8,6 @@
 ![](https://img.shields.io/badge/Made%20with%20love%20and-javascript-blue)
 [![MIT license](https://img.shields.io/badge/License-MIT-green.svg)](https://lbesson.mit-license.org/)
 
-## Ringraziamenti
-
-Lo script si ispira all'ottimo codice [lite-youtube di justinribeiro](https://github.com/justinribeiro/lite-youtube) che ringrazio per il suo lavoro.
-
 ## Sommario
 
 - [Demo](#demo)
