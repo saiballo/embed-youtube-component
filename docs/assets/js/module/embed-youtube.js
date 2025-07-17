@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 12/05/2025 (10:37:49)
+* Last update: 16/07/2025 (16:45:38)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -15,13 +15,13 @@
 
 import { defaultConfig } from "./include/config.js";
 import { initShadowDom } from "./include/initShadowDom.js";
-import { preloadConnection, injectSchema, setLabel, hideElem, missingVideoId } from "./include/util.js";
+import { preloadConnection, injectSchema, setLabel, hideElem, normalizeVideoId, missingVideoId } from "./include/util.js";
 
 (() => {
 
 	"use strict";
 
-	// prendo il currentScript per leggere alcuni parametri globali ma solo se non è type="module" atrlimenti leggo il body
+	// prendo il currentScript per leggere alcuni parametri globali ma solo se non è type="module" altrimenti leggo il body
 	const globalParamHook = document.currentScript || document.getElementsByTagName("body")[0];
 
 	class embedYouTube extends HTMLElement {
@@ -45,12 +45,12 @@ import { preloadConnection, injectSchema, setLabel, hideElem, missingVideoId } f
 
 		static get observedAttributes() {
 
-			return ["video-id", "playlist-id", "video-title", "play-text", "poster-url", "poster-fallback", "short"];
+			return ["video-id", "playlist-id", "video-title", "play-text", "poster-url", "poster-fallback", "short", "mute"];
 		}
 
 		connectedCallback() {
 
-			// se non c'è l'id del video allora non carico il component
+			// se l'url/id del video è errato oppure non c'è non carico il component
 			if (missingVideoId(this)) return;
 
 			// setup del componente
@@ -75,7 +75,11 @@ import { preloadConnection, injectSchema, setLabel, hideElem, missingVideoId } f
 
 		// get attributi locali del component
 		get videoId() {
-			return encodeURIComponent(this.getAttribute("video-id") || "");
+
+			const rawId = this.getAttribute("video-id") || "";
+			const id = normalizeVideoId(rawId);
+
+			return encodeURIComponent(id);
 		}
 
 		get playlistId() {
@@ -91,7 +95,6 @@ import { preloadConnection, injectSchema, setLabel, hideElem, missingVideoId } f
 		}
 
 		get playText() {
-
 			return this.getAttribute("play-text");
 		}
 
@@ -120,7 +123,7 @@ import { preloadConnection, injectSchema, setLabel, hideElem, missingVideoId } f
 		}
 		// get attributi locali del component
 
-		// has attributi locali del component- a che servono se non li uso?
+		// has attributi locali del component
 		get autoLoad() {
 			return this.hasAttribute("autoload") || this.globalParam.hasAttribute("data-autoload");
 		}
@@ -129,12 +132,16 @@ import { preloadConnection, injectSchema, setLabel, hideElem, missingVideoId } f
 			return this.hasAttribute("autoplay") || this.globalParam.hasAttribute("data-autoplay");
 		}
 
+		get mute() {
+			return this.hasAttribute("mute") || this.globalParam.hasAttribute("data-mute");
+		}
+
 		get autoPause() {
 			return this.hasAttribute("autopause") || this.globalParam.hasAttribute("data-autopause");
 		}
 
 		get noCookie() {
-			return this.hasAttribute("no-cookie") || this.globalParam.hasAttribute("data-no-no-cookie")
+			return this.hasAttribute("no-cookie") || this.globalParam.hasAttribute("data-no-no-cookie");
 		}
 
 		get noSchema() {
@@ -231,28 +238,21 @@ import { preloadConnection, injectSchema, setLabel, hideElem, missingVideoId } f
 				// gestione parametri
 				const enableApi = this.autoPlay || this.autoPause || this.isYouTubeShort() ? 1 : 0;
 				const autoplay = this.autoLoad && !this.autoPlay ? 0 : 1;
-				const mute = autoplay ? 1 : 0;
+				const muted = this.mute ? 1 : 0;
 				const startAt = this.videoStartAt;
 
-				console.log(mute);
-
-				// da riscrivere?
 				videoParam = `enablejsapi=${enableApi}&autoplay=${autoplay}&start=${startAt}`;
 
 				if (autoplay && this.autoLoad) {
 
 					videoParam = `${videoParam}&mute=1`;
-					// videoParam = `${videoParam}&autoplay=1&mute=1`;
 
 				} else {
 
-					videoParam = `${videoParam}&mute=0`;
+					videoParam = `${videoParam}&mute=${muted}`;
 				}
 
-				console.log(autoplay);
-				console.log(videoParam);
-
-				//enablejsapi=1&start=0&autoplay=1&mute=0 senza param o solo autoplay
+				// enablejsapi=1&start=0&autoplay=1&mute=0 senza param o solo autoplay
 				// enablejsapi=1&start=0&autoplay=0&mute=0 solo autoload
 				// enablejsapi=1&start=0&autoplay=1&mute=1 tutti e due
 
@@ -371,7 +371,7 @@ import { preloadConnection, injectSchema, setLabel, hideElem, missingVideoId } f
 			this.domPlayButton.setAttribute("aria-hidden", "true");
 
 			// rimuovo eventuali immagini webp e jpg
-			this.domPosterContainer.querySelector("#img-webp")?.remove()
+			this.domPosterContainer.querySelector("#img-webp")?.remove();
 			this.domPosterContainer.querySelector("#img-jpg")?.remove();
 
 			// imposto l'immagine svg

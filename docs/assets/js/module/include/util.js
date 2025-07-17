@@ -4,7 +4,7 @@
 * Created: 30/04/2025 (17:20:44)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 12/05/2025 (11:44:31)
+* Last update: 16/07/2025 (16:44:48)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - sss diritti riservati
@@ -58,6 +58,45 @@ export const preloadConnection = (() => {
 })();
 
 /**
+ * The `normalizeVideoId` function in JavaScript decodes a raw video ID, extracts the ID from a YouTube embed URL, and returns the normalized video ID.
+ * @param rawid - it is the input value that represents either a video ID or a YouTube embed URL. The `normalizeVideoId` function takes this input and normalizes it to
+ * return the video ID in a consistent format. If the input is a YouTube embed URL, it extracts the video ID
+ * @returns it returns the normalized video ID. If the input `rawid` is empty or falsy, an empty string is returned. If the `rawid` is a YouTube embed URL, it
+ * extracts the `si` parameter value from the URL and returns it. If the `rawid` is not a valid URL or not a YouTube embed URL, it returns the
+ */
+export const normalizeVideoId = (rawid) => {
+
+	if (!rawid) return "";
+
+	const videoId = decodeURIComponent(rawid);
+	const isUrl = /^(?:https?:\/\/|www\.)/.test(rawid);
+
+	if (isUrl) {
+
+		// se è un URL di embed YouTube, prendo il parametro dell'id
+		if (videoId.includes("youtube.com") || videoId.includes("youtu.be")) {
+
+			try {
+
+				const url = new URL(videoId);
+				const segments = url.pathname.split("/");
+				// l'ultimo segmento è sempre l'ID
+				return segments.pop() || "";
+
+			} catch {
+
+				return "";
+			}
+		}
+
+		return "";
+	}
+
+	// altrimenti è già l'ID
+	return videoId;
+};
+
+/**
  * The function `missingVideoId` checks if a video ID is provided and displays an error message if it is missing.
  * @param context - it contains information related to the current state or environment of the application.
  * @returns it returns a boolean value. It returns `true` if there is no `videoId` in the `context` object or if the `videoId` is an empty string, and it returns `false` otherwise.
@@ -78,7 +117,7 @@ export const missingVideoId = (context) => {
 	}
 
 	return false;
-}
+};
 
 /**
  * The `injectSchema` function creates a JSON-LD script element for embedding YouTube videos with schema.org metadata.

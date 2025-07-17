@@ -4,7 +4,7 @@
 * Created: 04/05/2025 (19:35:57)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 12/05/2025 (11:44:10)
+* Last update: 16/07/2025 (16:29:22)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -23,7 +23,7 @@ export const defaultConfig = {
 	"activeIframeClass": "isactive",
 	"textVideoTitle": "Video da Youtube",
 	"textVideoDescription": "Guarda questo video incorporato nel sito da Youtube",
-	"textMissingVideoId": "ID video mancante",
+	"textMissingVideoId": "ID video errato o mancante",
 	"textBtn": "Riproduci",
 	"textVideo": "video",
 	"spinnerColor": "#ff0000",
