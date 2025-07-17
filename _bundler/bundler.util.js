@@ -2,11 +2,11 @@
  * @preserve
  * Filename: bundler.util.js
  *
- * Created: 05/05/2025 (12:19:26)
- * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
+ * Created: 12/05/2025 (14:16:22)
+ * Created by: Lorenzo Forti <lorenzo.forti@alecsandria.it>
  *
- * Last Updated: 05/05/2025 (12:19:26)
- * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
+ * Last Updated: 12/05/2025 (14:16:22)
+ * Updated by: Lorenzo Forti <lorenzo.forti@alecsandria.it>
  *
  * Copyleft: 2025 - Tutti i diritti riservati
  *
@@ -278,14 +278,15 @@ const isInPartialFolder = (filepath, srcjspath, excludefolderlist) => {
 	// se il file non è sotto src/js, non è un file JS valido per noi
 	if (!normalizedPath.includes(normalizedSrcJsPath)) return false;
 
-	// ottengo il path esatto della cartella escludendo il src/js. quindi "include" è diverso da "fodler/include"
+	// ottengo il path esatto della cartella escludendo il src/js. quindi "include" è diverso da "folder/include"
 	const relativePath = path.relative(normalizedSrcJsPath, normalizedPath);
 	const folderPath = path.dirname(relativePath);
 	// serve per windows perchè il path di windows è con \ e non / e quindi path.sep sa su cosa splittare
 	const normalized = folderPath.split(path.sep).join("/");
-
 	// confronto preciso con la lista
-	return excludefolderlist.includes(normalized);
+	const folderSegments = normalized.split("/");
+
+	return folderSegments.some(segment => excludefolderlist.includes(segment));
 };
 
 /**
@@ -339,6 +340,7 @@ const getSnippetOptions = () => {
 			"match": /<\/body>/i,
 			"fn": (snippet, match) => {
 				const script = `
+					<!-- solo per sviluppo -->
 					<script>
 						document.addEventListener("DOMContentLoaded", () => {
 							const observer = new MutationObserver(() => {
@@ -353,7 +355,8 @@ const getSnippetOptions = () => {
 								"subtree": true
 							});
 						});
-					</script>`;
+					</script>
+					<!-- solo per sviluppo -->`;
 				return script + snippet + match;
 			}
 		}

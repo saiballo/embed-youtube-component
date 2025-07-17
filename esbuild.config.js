@@ -2,17 +2,18 @@
  * @preserve
  * Filename: esbuild.config.js
  *
- * Created: 05/05/2025 (12:19:26)
- * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
+ * Created: 12/05/2025 (14:16:22)
+ * Created by: Lorenzo Forti <lorenzo.forti@alecsandria.it>
  *
- * Last Updated: 05/05/2025 (12:19:26)
- * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
+ * Last Updated: 12/05/2025 (11:44:10)
+ * Updated by: Lorenzo Forti <lorenzo.forti@alecsandria.it>
  *
  * Copyleft: 2025 - Tutti i diritti riservati
  *
  * Comments:
  */
 
+const alias = require("esbuild-plugin-alias");
 const esbuild = require("esbuild");
 const fg = require("fast-glob");
 const path = require("node:path");
@@ -86,6 +87,10 @@ const buildFile = async (entrypath) => {
 		// necessario per far funzionare minifyTemplate per i css
 		"write": false,
 		"plugins": [
+			// alias per jquery in caso servisse
+			alias({
+    			jquery: path.resolve(__dirname, `${bundleConf.outputDir}/${bundleConf.outputDirAssets}/vendor/jquery/jquery-3.7.1.min.js`)
+  			}),
 			replace({
 				"values": bundleUtil.getAllEnvironmentVar(),
 				"preventAssignment": true
