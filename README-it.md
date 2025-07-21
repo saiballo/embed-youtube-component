@@ -57,6 +57,7 @@ In questo caso si usa il file sorgente con `type="module"` e non sarà possibile
 ```
 
 3) **Importare lo script, come "side-effect import"**
+
 È possibile importare il codice in qualsiasi altro entrypoint javascript. In questo caso i parametri globali andranno impostati sullo script "entrypoint" (tag `<script>`) se non si utilizza `type="module"` oppure sul tag `body` se si imposta `type="module"`.
 ```
 // script master.js
@@ -124,7 +125,7 @@ Una volta caricato il javascript principale si può inserire uno o più web comp
 
 In questo caso specifico verrà mostrata la copertina ufficiale del video ma non verrà creato automaticamente l'iframe di YouTube. Anche se al caricamento della pagina non c'è interazione dell'utente con il video, in questa modalità non si avrà piena adesione al GDPR perchè il poster del video è comunque scaricato dai server di Google.
 
-Per avere una piena e totale compatibilità con la normativa GDPR si può impostare il tag "embed-youtube" in questa maniera:
+Per avere una piena e totale compatibilità con la normativa GDPR si può impostare il tag `embed-youtube` in questa maniera:
 
 ```
 <embed-youtube video-id="kTwPG53ZAIg" poster-url="path/to/custom-poster.jpg"></embed-youtube>
@@ -319,7 +320,7 @@ Può essere intercettato con un eventListener delegato. Ciò significa che vale 
 </script>
 ```
 
-È possibile aggiornare dinamicamente i componenti video modificando uno o più attributi in questa lista: `video-id`, `playlist-id`, `video-title`, `play-text`, `poster-url`, `poster-fallback`, `short`. Esempio:
+È possibile aggiornare dinamicamente i componenti video modificando uno o più attributi in questa lista: `video-id`, `playlist-id`, `video-title`, `play-text`, `poster-url`, `poster-fallback`, `short`, `mute`. Esempio:
 
 ```
 <script>

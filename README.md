@@ -55,6 +55,7 @@ Use the uncompiled file with `type="module"`. In this mode you can’t add `data
 ```
 
 3. **Side-effect import**
+
 Import the component in any other JavaScript entry point. Global parameters apply to the entry-point script (`<script>` tag) or the `<body>` if using `type="module`:
 ```
 // master.js
@@ -317,7 +318,7 @@ You can listen globally:
 </script>
 ```
 
-Components can be updated dynamically by changing one or more attributes from this list: `video-id`, `playlist-id`, `video-title`, `play-text`, `poster-url`, `poster-fallback`, `short`. Example:
+Components can be updated dynamically by changing one or more attributes from this list: `video-id`, `playlist-id`, `video-title`, `play-text`, `poster-url`, `poster-fallback`, `short`, `mute`. Example:
 
 ```
 <script>
