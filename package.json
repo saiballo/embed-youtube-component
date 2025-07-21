@@ -1,6 +1,6 @@
 {
 	"name": "embed-youtube-component",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"description": "Boilerplate per lo sviluppo di prototipi statici. SASS e Esbuild si occupano di gestire la compilazione dei file css e javascript attraverso Gulp come task runner.",
 	"author": {
 		"name": "Lorenzo Saibal Forti",
@@ -38,9 +38,9 @@
 		"autoprefixer": "^10.4.21",
 		"browser-sync": "^3.0.4",
 		"cross-env": "^7.0.3",
-		"cssnano": "^7.0.7",
+		"cssnano": "^7.1.0",
 		"del": "^8.0.0",
-		"esbuild": "^0.25.6",
+		"esbuild": "^0.25.8",
 		"esbuild-minify-templates": "^0.12.0",
 		"esbuild-plugin-alias": "^0.2.1",
 		"esbuild-plugin-replace": "^1.4.0",
