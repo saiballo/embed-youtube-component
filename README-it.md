@@ -339,7 +339,7 @@ Può essere intercettato con un eventListener delegato. Ciò significa che vale 
 
 ### Stili CSS
 
-Due elementi del component sono disponibili per eventuali personalizzazioni CSS:
+Alcuni elementi del component sono disponibili per eventuali personalizzazioni CSS:
 
 ```css
 <style>

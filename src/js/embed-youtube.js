@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 16/07/2025 (16:45:38)
+* Last update: 22/07/2025 (15:15:47)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -41,36 +41,6 @@ import { preloadConnection, injectSchema, setLabel, hideElem, normalizeVideoId, 
 			this.globalParam = globalParamHook;
 			// inizializzo il codice e gli stili css
 			initShadowDom(this);
-		}
-
-		static get observedAttributes() {
-
-			return ["video-id", "playlist-id", "video-title", "play-text", "poster-url", "poster-fallback", "short", "mute"];
-		}
-
-		connectedCallback() {
-
-			// se l'url/id del video è errato oppure non c'è non carico il component
-			if (missingVideoId(this)) return;
-
-			// setup del componente
-			this.setupComponent();
-
-			// evento click per creare l'iframe
-			this.addEventListener("click", () => {
-
-				this.loadIframe();
-			});
-
-			// preload delle connessioni
-			this.addEventListener("pointerover", () => {
-
-				preloadConnection(this);
-
-			}, {
-
-				"once": true
-			});
 		}
 
 		// get attributi locali del component
@@ -160,6 +130,36 @@ import { preloadConnection, injectSchema, setLabel, hideElem, normalizeVideoId, 
 			return this.hasAttribute("poster-fallback");
 		}
 		// has attributi locali del component
+
+		static get observedAttributes() {
+
+			return ["video-id", "playlist-id", "video-title", "play-text", "poster-url", "poster-fallback", "short", "mute"];
+		}
+
+		connectedCallback() {
+
+			// se l'url/id del video è errato oppure non c'è non carico il component
+			if (missingVideoId(this)) return;
+
+			// setup del componente
+			this.setupComponent();
+
+			// evento click per creare l'iframe
+			this.addEventListener("click", () => {
+
+				this.loadIframe();
+			});
+
+			// preload delle connessioni
+			this.addEventListener("pointerover", () => {
+
+				preloadConnection(this);
+
+			}, {
+
+				"once": true
+			});
+		}
 
 		/**
 		 * The `setupComponent` sets up various properties and behaviors for a video component, including setting labels, custom posters, auto-loading iframes etc.
