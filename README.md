@@ -14,7 +14,7 @@
 - [Installation](#installation)
 - [Global Parameters](#global-parameters)
 - [Using the Web Component](#using-the-web-component)
-- [Parameter List](#parameter-list)
+- [Properties List](#properties-list)
 - [Default Configuration](#default-configuration)
 - [GDPR Compliance](#gdpr-compliance)
 - [Events](#events)
@@ -154,12 +154,12 @@ If you need fully custom iframe parameters, use the `param-list` attribute:
 
 > **Note:** Using `param-list` overrides built-in handling of attributes like `autoload` and `autoplay`.
 
-## Parameter List
+## Properties List
 
 <table style="width:100%; border-collapse: collapse;">
 	<thead>
 		<tr>
-			<th style="border: 1px solid #ddd; padding: 8px;">Parameter</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Properties</th>
 			<th style="border: 1px solid #ddd; padding: 8px;">Description</th>
 			<th style="border: 1px solid #ddd; padding: 8px;">Default</th>
 		</tr>
