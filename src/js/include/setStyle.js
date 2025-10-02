@@ -4,15 +4,13 @@
 * Created: 30/04/2025 (16:26:32)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 16/07/2025 (16:32:28)
+* Last update: 12/09/2025 (10:52:17)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2024 - Tutti i diritti riservati
 *
 * Comments:
 */
-
-"use strict";
 
 export const setStyle = () => {
 

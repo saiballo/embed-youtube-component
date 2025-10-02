@@ -4,15 +4,13 @@
 * Created: 04/05/2025 (19:35:57)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 16/07/2025 (16:29:22)
+* Last update: 12/09/2025 (10:51:48)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
 *
 * Comments:
 */
-
-"use strict";
 
 export const defaultConfig = {
 	"idEmbedContainer": "embed-container",
