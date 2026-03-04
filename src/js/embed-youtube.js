@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 04/03/2026 (18:02:52)
+* Last update: 04/03/2026 (18:13:20)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -187,7 +187,7 @@ class EmbedYouTube extends HTMLElement {
 
 		if (this.globalPlayOnHidden === false) {
 
-			this.constructor.ensureVisibilityListener();
+			this.constructor.loadVisibilityListener();
 		}
 	}
 
