@@ -66,14 +66,14 @@ import './embed-youtube.js';
 
 You can set the following global parameters via `data-*` on the `<script>` or `<body>` tag:
 
-* **`data-autoload`**: Automatically instantiate the YouTube iframe for every video on the page. _GDPR compliant: No._
-* **`data-autoplay`**: Only works if `data-autoload` is set. Starts the video muted on page load. _GDPR compliant: No._
-* **`data-autopause`**: Pauses the video when the player leaves the viewport (e.g. on scroll).
-* **`data-mute`**: Mutes the audio when the user manually plays the video.
-* **`data-no-preconnect`**: By default, `<link rel="preconnect">` tags are inserted for YouTube resources. This disables them (useful if your site already includes them).
-* **`data-no-schema`**: Disables the JSON-LD Schema.org snippet (used for SEO and accessibility).
-* **`data-no-cookie`**: Enables the "no-cookie" domain provided by YouTube to prevent the sending of tracking cookies.
-* **`data-play-hiddentab`**: By default, a started video is automatically paused if the user moves the website tab to the background. Set this parameter to prevent videos from being paused when the browser tab changes.
+* **`data-autoload`**: automatically instantiate the YouTube iframe for every video on the page. _GDPR compliant: No._
+* **`data-autoplay`**: only works if `data-autoload` is set. Starts the video muted on page load. _GDPR compliant: No._
+* **`data-autopause`**: pauses the video when the player leaves the viewport (e.g. on scroll).
+* **`data-mute`**: mutes the audio when the user manually plays the video.
+* **`data-no-preconnect`**: by default, `<link rel="preconnect">` tags are inserted for YouTube resources. This disables them (useful if your site already includes them).
+* **`data-no-schema`**: disables the JSON-LD Schema.org snippet (used for SEO and accessibility).
+* **`data-no-cookie`**: enables the "no-cookie" domain provided by YouTube to prevent the sending of tracking cookies.
+* **`data-play-hiddentab`**: by default, a started video is automatically paused if the user moves the website tab to the background. Set this parameter to prevent videos from being paused when the browser tab changes.
 
 **Example with global parameters on the script tag:**
 

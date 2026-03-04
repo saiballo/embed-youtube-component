@@ -1,7 +1,7 @@
 {
-	"name": "html5-boilerplate",
-	"version": "1.0.0",
-	"description": "Boilerplate per lo sviluppo di prototipi statici. SASS e Esbuild si occupano di gestire la compilazione dei file css e javascript attraverso Gulp come task runner.",
+	"name": "embed-youtube-component",
+	"version": "2.3.2",
+	"description": "A Web Component for embedding YouTube videos on your site in a GDPR-compliant way. By setting certain parameters, nothing is fetched from Google’s servers until the user clicks Play on the video.",
 	"author": {
 		"name": "Lorenzo Saibal Forti",
 		"email": "lorenzo.forti@gmail.com"
@@ -9,7 +9,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://URL"
+		"url": "git+https://github.com/saiballo/embed-youtube-component"
 	},
 	"engines": {
 		"node": ">=16.0.0"

@@ -4,7 +4,7 @@
 * Created: 30/04/2025 (17:20:44)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 04/03/2026 (10:51:50)
+* Last update: 04/03/2026 (18:47:30)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - sss diritti riservati
@@ -190,7 +190,7 @@ export const hideElem = (btn, hide = true, timeout = 250) => {
 	if (hide) {
 
 		btn.hidden = true;
-		return true;
+		return;
 	}
 
 	setTimeout(() => {
