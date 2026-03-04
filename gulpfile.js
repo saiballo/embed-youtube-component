@@ -858,13 +858,33 @@ const postBuild = async () => {
 };
 
 /**
+ * The `copyModule` function copies JavaScript files from specific source directories to a destination directory using Gulp.
+ * @returns The `copyModule` function returns a Promise that resolves when both the `embedFile` and `includeFolder` tasks are completed.
+ */
+const copyModule = () => {
+
+	const embedFile = gulp.src("./src/js/embed-youtube.js")
+		.pipe(gulp.dest(`${fullJsPath}/module`));
+
+	const includeFolder = gulp.src("./src/js/include/**/*")
+		.pipe(gulp.dest(`${fullJsPath}/module/include`));
+
+	return Promise.all([
+		new Promise((resolve, reject) => embedFile.on("end", resolve).on("error", reject)),
+		new Promise((resolve, reject) => includeFolder.on("end", resolve).on("error", reject))
+	]);
+};
+
+/**
  * The above code is a JavaScript code snippet that defines a Gulp task named `build`. This task is a series of steps that are executed in a specific order:
  */
 const build = gulp.series(
 	// compila i file scss e js
 	gulp.parallel(compileSass, compileJs),
 	// rimuove i file mappa ed eventualmente esegue purgecss
-	postBuild
+	postBuild,
+	// copio il file modulo nella docs
+	copyModule
 );
 
 /**
