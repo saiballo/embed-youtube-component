@@ -73,6 +73,8 @@ Sono disponibili i seguenti parametri globali da inserire come data-*:
 * **`data-mute`**: imposta a muto l'audio del video quando viene fatto partire manualmente dall'utente.
 * **`data-no-preconnect`**: di default vengono inseriti dei tag "preconnect" per le risorse YouTube. Con questo parametro i tag non vengono aggiunti (utile in quei casi in cui i codici sono già presenti nel codice del sito)
 * **`data-no-schema`**: non stampa lo schema JSON-LD per ogni video. Lo schema è utile sia per finalità SEO che di accessibilità.
+* **`data-no-cookie`**: abilita il dominio "no-cookie" fornito da YouTube per bloccare l'invio di cookie traccianti.
+* **`data-play-hiddentab`**: di default un video avviato viene bloccato automaticamente se l'utente mette la TAB del sito in secondo piano. Impostare questo parametro per non bloccare i video al cambio TAB del browser.
 
 Esempio di script con i parametri globali impostati:
 
@@ -82,7 +84,7 @@ Esempio di script con i parametri globali impostati:
 
 	<head>
 
-		<script defer src="embed-youtube.min.js" data-autoload data-autoplay data-autopause></script>
+		<script defer src="embed-youtube.min.js" data-autoload data-autoplay data-autopause data-play-hiddentab></script>
 
 	</head>
 
@@ -223,6 +225,11 @@ Di default i parametri dll'iframe passati a YouTube sono gestiti in automatico d
 			<td style="border: 1px solid #ddd; padding: 8px;">non impostato</td>
 		</tr>
 		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">no-cookie</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Abilita il dominio "no-cookie" fornito da YouTube per bloccare l'invio di cookie traccianti.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">non impostato</td>
+		</tr>
+		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">no-lazyload</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Disabilita il caricamento "lazy" delle immagini originali del video (poster) oppure di quelle custome.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">non impostato</td>
@@ -285,7 +292,10 @@ Alcuni parametri di default, nella maggior parte dei casi sono testi, possono es
 		"textVideo": "video",
 		"videoStartAt": 0,
 		"spinnerColor": "#ff0000",
-		"posterQuality": "hqdefault"
+		"posterQuality": "hqdefault",
+		"playOnHiddenTab": false,
+		"noCookie": false,
+		"noSchema": false
 	};
 </script>
 ```

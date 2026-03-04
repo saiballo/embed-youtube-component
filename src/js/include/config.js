@@ -4,7 +4,7 @@
 * Created: 04/05/2025 (19:35:57)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 12/09/2025 (10:51:48)
+* Last update: 04/03/2026 (16:42:59)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -26,5 +26,8 @@ export const defaultConfig = {
 	"textVideo": "video",
 	"spinnerColor": "#ff0000",
 	"videoStartAt": 0,
-	"posterQuality": "hqdefault"
+	"posterQuality": "hqdefault",
+	"playOnHiddenTab": false,
+	"noCookie": false,
+	"noSchema": false
 };

@@ -72,6 +72,8 @@ You can set the following global parameters via `data-*` on the `<script>` or `<
 * **`data-mute`**: Mutes the audio when the user manually plays the video.
 * **`data-no-preconnect`**: By default, `<link rel="preconnect">` tags are inserted for YouTube resources. This disables them (useful if your site already includes them).
 * **`data-no-schema`**: Disables the JSON-LD Schema.org snippet (used for SEO and accessibility).
+* **`data-no-cookie`**: Enables the "no-cookie" domain provided by YouTube to prevent the sending of tracking cookies.
+* **`data-play-hiddentab`**: By default, a started video is automatically paused if the user moves the website tab to the background. Set this parameter to prevent videos from being paused when the browser tab changes.
 
 **Example with global parameters on the script tag:**
 
@@ -81,7 +83,7 @@ You can set the following global parameters via `data-*` on the `<script>` or `<
 
 	<head>
 
-		<script defer src="embed-youtube.min.js" data-autoload data-autoplay data-autopause></script>
+		<script defer src="embed-youtube.min.js" data-autoload data-autoplay data-autopause data-play-hiddentab></script>
 
 	</head>
 
@@ -221,6 +223,11 @@ If you need fully custom iframe parameters, use the `param-list` attribute:
 			<td style="border: 1px solid #ddd; padding: 8px;">not set</td>
 		</tr>
 		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">no-cookie</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Enables the "no-cookie" domain provided by YouTube to prevent the sending of tracking cookies.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">not set</td>
+		</tr>
+		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">no-lazyload</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Disables lazy-loading of poster images (original or custom).</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">not set</td>
@@ -283,7 +290,10 @@ You can override defaults by defining a global `embedYoutubeConfig` object befor
 		"textVideo": "video",
 		"videoStartAt": 0,
 		"spinnerColor": "#ff0000",
-		"posterQuality": "hqdefault"
+		"posterQuality": "hqdefault",
+		"playOnHiddenTab": false,
+		"noCookie": false,
+		"noSchema": false
 	};
 </script>
 ```

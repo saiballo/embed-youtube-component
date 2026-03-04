@@ -4,7 +4,7 @@
 * Created: 30/04/2025 (17:20:44)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 16/07/2025 (16:44:48)
+* Last update: 04/03/2026 (10:51:50)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - sss diritti riservati
@@ -35,12 +35,12 @@ export const preloadConnection = (() => {
 
 	return (context) => {
 
-		if (isPreconnected || context.noPreconnect || context.globalNoPreconnect) return;
+		if (isPreconnected || context.noPreconnect) return;
 
 		addPrefetch("preconnect", "https://i.ytimg.com/");
 		addPrefetch("preconnect", "https://s.ytimg.com");
 
-		if (!context.noCookie) {
+		if (context.noCookie === false) {
 
 			addPrefetch("preconnect", "https://www.youtube.com");
 			addPrefetch("preconnect", "https://www.google.com");
@@ -190,11 +190,10 @@ export const hideElem = (btn, hide = true, timeout = 250) => {
 	if (hide) {
 
 		btn.hidden = true;
-
-	} else {
-
-		setTimeout(() => {
-			btn.hidden = false;
-		}, timeout);
+		return true;
 	}
+
+	setTimeout(() => {
+		btn.hidden = false;
+	}, timeout);
 };

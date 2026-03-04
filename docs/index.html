@@ -26,7 +26,7 @@
 		</style>
 
 		<!-- <script type="module" src="assets/js/module/embed-youtube.js"></script> -->
-		<script defer src="assets/js/embed-youtube.min.js" data-autoplay></script>
+		<script defer src="assets/js/embed-youtube.min.js"></script>
 
 		<script>
 			document.addEventListener("embedYoutubeLoaded", (e) => {
@@ -39,19 +39,12 @@
 
     <body>
 
+		<p style="margin-bottom:0">All videos stop when the browser tab visibility changes</p>
+
 		<!-- video container -->
 		<div style="width:100%; max-width:600px">
-			<p style="margin-bottom:0">Muted video with autopause (you need to scroll the page) and no muted</p>
+			<p style="margin-bottom:0">No muted video with autopause (you need to scroll the page). You must press Play.</p>
 			<embed-youtube id="myVideo" video-id="kTwPG53ZAIg" video-title="my video with id" autopause></embed-youtube>
-		</div>
-		<!-- video container -->
-
-		<br>
-
-		<!-- video container -->
-		<div style="width:100%; max-width:600px">
-			<p style="margin-bottom:0">Muted video with url as ID and autopause (you need to scroll the page)</p>
-			<embed-youtube video-id="https://youtu.be/kTwPG53ZAIg?si=P1KzvrzLOKE2SDHB" video-title="my video with url" autopause mute></embed-youtube>
 		</div>
 		<!-- video container -->
 

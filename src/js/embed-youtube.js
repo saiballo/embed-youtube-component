@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 01/09/2025 (11:28:45)
+* Last update: 04/03/2026 (18:02:52)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -18,6 +18,12 @@ import { initShadowDom } from "./include/initShadowDom.js";
 import { preloadConnection, injectSchema, setLabel, hideElem, normalizeVideoId, missingVideoId } from "./include/util.js";
 
 class EmbedYouTube extends HTMLElement {
+
+	// instanza globale della classe
+	static instanceList = new Set();
+
+	// controllo globale dell'event listener visibility
+	static visibilityListenerInit = false;
 
 	constructor() {
 
@@ -87,6 +93,12 @@ class EmbedYouTube extends HTMLElement {
 	}
 	// get attributi locali del component
 
+	// has attributi globali
+	get globalPlayOnHidden() {
+		return this.globalParam.hasAttribute("data-play-hiddentab") || this.config.playOnHiddenTab;
+	}
+	// has attributi globali
+
 	// has attributi locali del component
 	get autoLoad() {
 		return this.hasAttribute("autoload") || this.globalParam.hasAttribute("data-autoload");
@@ -105,11 +117,11 @@ class EmbedYouTube extends HTMLElement {
 	}
 
 	get noCookie() {
-		return this.hasAttribute("no-cookie") || this.globalParam.hasAttribute("data-no-cookie");
+		return this.hasAttribute("no-cookie") || this.globalParam.hasAttribute("data-no-cookie") || this.config.noCookie;
 	}
 
 	get noSchema() {
-		return this.hasAttribute("no-schema") || this.globalParam.hasAttribute("data-no-schema");
+		return this.hasAttribute("no-schema") || this.globalParam.hasAttribute("data-no-schema") || this.config.noSchema;
 	}
 
 	get noPreconnect() {
@@ -128,6 +140,22 @@ class EmbedYouTube extends HTMLElement {
 	static get observedAttributes() {
 
 		return ["video-id", "playlist-id", "video-title", "play-text", "poster-url", "poster-fallback", "short", "mute"];
+	}
+
+	static loadVisibilityListener() {
+
+		if (this.visibilityListenerInit === true) return;
+
+		this.visibilityListenerInit = true;
+
+		document.addEventListener("visibilitychange", () => {
+
+			if (document.hidden === false) return;
+
+			this.instanceList.forEach((instance) => {
+				instance.pauseVideo();
+			});
+		});
 	}
 
 	connectedCallback() {
@@ -153,6 +181,14 @@ class EmbedYouTube extends HTMLElement {
 
 			"once": true
 		});
+
+		// registra istanza singolo video su static. in alternativa va bene anche il nome della classe ma è meno flessibile: EmbedYouTube.instances
+		this.constructor.instanceList.add(this);
+
+		if (this.globalPlayOnHidden === false) {
+
+			this.constructor.ensureVisibilityListener();
+		}
 	}
 
 	/**
@@ -204,7 +240,7 @@ class EmbedYouTube extends HTMLElement {
 		}
 
 		// creazione schema json per seo
-		if (!this.noSchema) {
+		if (this.noSchema === false) {
 
 			injectSchema(this);
 		}
@@ -230,7 +266,7 @@ class EmbedYouTube extends HTMLElement {
 		} else {
 
 			// gestione parametri
-			const enableApi = this.autoPlay || this.autoPause || this.isYouTubeShort() ? 1 : 0;
+			const enableApi = this.autoPlay || this.autoPause || this.globalPlayOnHidden === false || this.isYouTubeShort() ? 1 : 0;
 			const autoplay = this.autoLoad && !this.autoPlay ? 0 : 1;
 			const muted = this.mute ? 1 : 0;
 			const startAt = this.videoStartAt;
@@ -268,7 +304,7 @@ class EmbedYouTube extends HTMLElement {
 	 */
 	loadIframe() {
 
-		if (!this.isIframeLoaded) {
+		if (this.isIframeLoaded === false) {
 
 			const iframeCode = this.createIframe();
 			this.domContainer.insertAdjacentHTML("beforeend", iframeCode);
@@ -305,7 +341,7 @@ class EmbedYouTube extends HTMLElement {
 
 			entryList.forEach((entry) => {
 
-				if (entry.isIntersecting && !this.isIframeLoaded) {
+				if (entry.isIntersecting && this.isIframeLoaded === false) {
 
 					preloadConnection(this);
 					this.loadIframe(true);
@@ -327,9 +363,15 @@ class EmbedYouTube extends HTMLElement {
 
 			entryList.forEach((entry) => {
 
-				if (!entry.isIntersecting) {
+				if (entry.isIntersecting === false) {
 
-					this.shadowRoot.querySelector("iframe")?.contentWindow?.postMessage("{\"event\":\"command\",\"func\":\"pauseVideo\",\"args\":\"\"}", "*");
+					const msg = {
+						"event": "command",
+						"func": "pauseVideo",
+						"args": []
+					};
+
+					this.shadowRoot.querySelector("iframe")?.contentWindow?.postMessage(JSON.stringify(msg), "*");
 				}
 			});
 
@@ -338,6 +380,23 @@ class EmbedYouTube extends HTMLElement {
 		});
 
 		this.observerVideo.observe(this);
+	}
+
+	/**
+	 * The `pauseVideo` function sends a message to an embedded iframe to pause the video playing within it.
+	 * @returns If the `isIframeLoaded` property is `false`, the function will return early without executing the rest of the code.
+	 */
+	pauseVideo() {
+
+		if (this.isIframeLoaded === false) return;
+
+		const msg = {
+			"event": "command",
+			"func": "pauseVideo",
+			"args": []
+		};
+
+		this.shadowRoot.querySelector("iframe")?.contentWindow?.postMessage(JSON.stringify(msg), "*");
 	}
 
 	/**
@@ -470,7 +529,7 @@ class EmbedYouTube extends HTMLElement {
 		const videoId = attrname === "video-id" ? oldvalue : this.videoId;
 
 		// cancello eventuali json. lo faccio sempre perchè non so quale attributo possa essere cambiato. in ogni caso viene richiamata la setup che lo riscrive
-		if (!this.noSchema && this.querySelector(`#json-${videoId}`)) {
+		if (this.noSchema === false && this.querySelector(`#json-${videoId}`)) {
 
 			this.querySelector(`#json-${videoId}`).remove();
 		}
@@ -495,6 +554,7 @@ class EmbedYouTube extends HTMLElement {
 	 */
 	disconnectedCallback() {
 
+		this.constructor?.instanceList.delete(this);
 		this.observerIframe?.disconnect();
 		this.observerVideo?.disconnect();
 	}
