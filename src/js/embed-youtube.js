@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 05/03/2026 (12:23:55)
+* Last update: 05/03/2026 (16:53:47)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -159,8 +159,6 @@ class EmbedYouTube extends HTMLElement {
 	}
 	// has attributi locali del component
 
-
-
 	connectedCallback() {
 
 		// se l'url/id del video è errato oppure non c'è non carico il component
@@ -280,9 +278,8 @@ class EmbedYouTube extends HTMLElement {
 
 		// parsing dei parametri
 		iframe.title = typeof this.videoTitle === "string" ? this.videoTitle : "";
-		iframe.setAttribute("credentialless", "");
 		iframe.setAttribute("allowfullscreen", "");
-		iframe.setAttribute("allow", "accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture");
+		iframe.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; playsinline");
 
 		// stabilisco se il dominio deve essere nocookie oppure no
 		const noCookieDomain = this.noCookie ? "-nocookie" : "";
@@ -312,18 +309,18 @@ class EmbedYouTube extends HTMLElement {
 			// allowlist dei parametri ammessi
 			const allowed = new Set([
 				"autoplay",
-				"start",
+				"controls",
+				"enablejsapi",
 				"end",
-				"mute",
-				"loop",
-				"playlist",
 				"list",
 				"listType",
-				"enablejsapi",
+				"loop",
+				"modestbranding",
+				"mute",
+				"playlist",
 				"playsinline",
 				"rel",
-				"controls",
-				"modestbranding"
+				"start"
 			]);
 
 			for (const [key, value] of customParams.entries()) {
