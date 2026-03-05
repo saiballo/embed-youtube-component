@@ -5,7 +5,7 @@
 * Created: 05/05/2025 (12:08:23)
 * Created by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
-* Last update: 04/03/2026 (18:13:20)
+* Last update: 05/03/2026 (12:23:55)
 * Updated by: Lorenzo Saibal Forti <lorenzo.forti@gmail.com>
 *
 * Copyleft: 2025 - Tutti i diritti riservati
@@ -25,6 +25,27 @@ class EmbedYouTube extends HTMLElement {
 	// controllo globale dell'event listener visibility
 	static visibilityListenerInit = false;
 
+	static get observedAttributes() {
+
+		return ["video-id", "playlist-id", "video-title", "play-text", "poster-url", "poster-fallback", "short", "mute"];
+	}
+
+	static loadVisibilityListener() {
+
+		if (this.visibilityListenerInit === true) return;
+
+		this.visibilityListenerInit = true;
+
+		document.addEventListener("visibilitychange", () => {
+
+			if (document.hidden === false) return;
+
+			this.instanceList.forEach((instance) => {
+				instance.pauseVideo();
+			});
+		});
+	}
+
 	constructor() {
 
 		super();
@@ -37,6 +58,7 @@ class EmbedYouTube extends HTMLElement {
 
 		this.scheduleUpdate = null;
 		this.isIframeLoaded = false;
+		this.listenerInit = false;
 		// prendo il currentScript per leggere alcuni parametri globali ma solo se non è type="module" altrimenti leggo il body
 		this.globalParam = document.currentScript || document.getElementsByTagName("body")[0];
 		// inizializzo il codice e gli stili css
@@ -47,9 +69,9 @@ class EmbedYouTube extends HTMLElement {
 	get videoId() {
 
 		const rawId = this.getAttribute("video-id") || "";
-		const id = normalizeVideoId(rawId);
+		const id = encodeURIComponent(normalizeVideoId(rawId));
 
-		return encodeURIComponent(id);
+		return id;
 	}
 
 	get playlistId() {
@@ -137,26 +159,7 @@ class EmbedYouTube extends HTMLElement {
 	}
 	// has attributi locali del component
 
-	static get observedAttributes() {
 
-		return ["video-id", "playlist-id", "video-title", "play-text", "poster-url", "poster-fallback", "short", "mute"];
-	}
-
-	static loadVisibilityListener() {
-
-		if (this.visibilityListenerInit === true) return;
-
-		this.visibilityListenerInit = true;
-
-		document.addEventListener("visibilitychange", () => {
-
-			if (document.hidden === false) return;
-
-			this.instanceList.forEach((instance) => {
-				instance.pauseVideo();
-			});
-		});
-	}
 
 	connectedCallback() {
 
@@ -166,21 +169,26 @@ class EmbedYouTube extends HTMLElement {
 		// setup del componente
 		this.setupComponent();
 
-		// evento click per creare l'iframe
-		this.addEventListener("click", () => {
+		if (this.listenerInit === false) {
 
-			this.loadIframe();
-		});
+			// evento click per creare l'iframe
+			this.addEventListener("click", () => {
 
-		// preload delle connessioni
-		this.addEventListener("pointerover", () => {
+				this.loadIframe();
+			});
 
-			preloadConnection(this);
+			// preload delle connessioni
+			this.addEventListener("pointerover", () => {
 
-		}, {
+				preloadConnection(this);
 
-			"once": true
-		});
+			}, {
+
+				"once": true
+			});
+
+			this.listenerInit = true;
+		}
 
 		// registra istanza singolo video su static. in alternativa va bene anche il nome della classe ma è meno flessibile: EmbedYouTube.instances
 		this.constructor.instanceList.add(this);
@@ -195,6 +203,9 @@ class EmbedYouTube extends HTMLElement {
 	 * The `setupComponent` sets up various properties and behaviors for a video component, including setting labels, custom posters, auto-loading iframes etc.
 	 */
 	setupComponent() {
+
+		// cleanup observer precedenti (setup può essere richiamata più volte)
+		this.cleanupObservers();
 
 		// costruisco la label a seconda dei dati presenti
 		const label = setLabel(this);
@@ -247,39 +258,100 @@ class EmbedYouTube extends HTMLElement {
 	}
 
 	/**
+	 * The function `cleanupObservers` disconnects any existing observers for iframe and video elements and sets them to null.
+	 */
+	cleanupObservers() {
+
+		this.observerIframe?.disconnect();
+		this.observerVideo?.disconnect();
+		this.observerIframe = null;
+		this.observerVideo = null;
+	}
+
+	/**
 	 * The function `createIframe()` generates an iframe code for embedding a YouTube video with specified parameters and options.
 	 * @returns it returns a string containing an HTML `<iframe>` element with attributes.
 	 * The src attribute is dynamically generated based on the parameters set within the function.
 	 */
 	createIframe() {
 
-		const noCookieDomain = this.noCookie ? "-nocookie" : "";
-		const embedTarget = this.playlistId ? `?listType=playlist&list=${this.playlistId}&` : `${this.videoId}?`;
+		// creo l'elemento iframe
+		const iframe = document.createElement("iframe");
 
-		let videoParam;
+		// parsing dei parametri
+		iframe.title = typeof this.videoTitle === "string" ? this.videoTitle : "";
+		iframe.setAttribute("credentialless", "");
+		iframe.setAttribute("allowfullscreen", "");
+		iframe.setAttribute("allow", "accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture");
+
+		// stabilisco se il dominio deve essere nocookie oppure no
+		const noCookieDomain = this.noCookie ? "-nocookie" : "";
+		// base url
+		const baseUrl = `https://www.youtube${noCookieDomain}.com/embed/`;
+
+		let iframeUrl;
+
+		// se c'è il parametro playlist lo aggiungo
+		if (this.playlistId && this.playlistId !== "") {
+
+			iframeUrl = new URL(baseUrl);
+			iframeUrl.searchParams.set("listType", "playlist");
+			iframeUrl.searchParams.set("list", String(this.playlistId));
+
+		} else {
+
+			iframeUrl = new URL(`${baseUrl}${String(this.videoId)}`);
+		}
 
 		// se ci sono parametri custom tutti i default vengono azzerati
 		if (this.paramList && this.paramList !== "") {
 
-			videoParam = this.paramList;
+			// rimuovo un solo ? o un solo & se è il primo carattere della stringa.
+			const customParams = new URLSearchParams(String(this.paramList).replace(/^\?/, "").replace(/^&/, ""));
+
+			// allowlist dei parametri ammessi
+			const allowed = new Set([
+				"autoplay",
+				"start",
+				"end",
+				"mute",
+				"loop",
+				"playlist",
+				"list",
+				"listType",
+				"enablejsapi",
+				"playsinline",
+				"rel",
+				"controls",
+				"modestbranding"
+			]);
+
+			for (const [key, value] of customParams.entries()) {
+
+				if (allowed.has(key) === true) {
+
+					iframeUrl.searchParams.set(key, value);
+				}
+			}
 
 		} else {
 
-			// gestione parametri
 			const enableApi = this.autoPlay || this.autoPause || this.globalPlayOnHidden === false || this.isYouTubeShort() ? 1 : 0;
 			const autoplay = this.autoLoad && !this.autoPlay ? 0 : 1;
 			const muted = this.mute ? 1 : 0;
 			const startAt = this.videoStartAt;
 
-			videoParam = `enablejsapi=${enableApi}&autoplay=${autoplay}&start=${startAt}`;
+			iframeUrl.searchParams.set("enablejsapi", String(enableApi));
+			iframeUrl.searchParams.set("autoplay", String(autoplay));
+			iframeUrl.searchParams.set("start", String(startAt));
 
-			if (autoplay && this.autoLoad) {
+			if (autoplay === 1 && this.autoLoad) {
 
-				videoParam = `${videoParam}&mute=1`;
+				iframeUrl.searchParams.set("mute", "1");
 
 			} else {
 
-				videoParam = `${videoParam}&mute=${muted}`;
+				iframeUrl.searchParams.set("mute", String(muted));
 			}
 
 			// enablejsapi=1&start=0&autoplay=1&mute=0 senza param o solo autoplay
@@ -288,15 +360,17 @@ class EmbedYouTube extends HTMLElement {
 
 			if (this.isYouTubeShort()) {
 
-				videoParam = `${videoParam}&loop=1&modestbranding=1&playsinline=1&rel=0&playlist=${this.videoId}`;
+				iframeUrl.searchParams.set("loop", "1");
+				iframeUrl.searchParams.set("modestbranding", "1");
+				iframeUrl.searchParams.set("playsinline", "1");
+				iframeUrl.searchParams.set("rel", "0");
+				iframeUrl.searchParams.set("playlist", String(this.videoId));
 			}
 		}
 
-		const iframeCode = `
-			<iframe title="${this.videoTitle}" credentialless allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen src="https://www.youtube${noCookieDomain}.com/embed/${embedTarget}${videoParam}"></iframe>
-		`;
+		iframe.src = iframeUrl.toString();
 
-		return iframeCode;
+		return iframe;
 	}
 
 	/**
@@ -306,8 +380,8 @@ class EmbedYouTube extends HTMLElement {
 
 		if (this.isIframeLoaded === false) {
 
-			const iframeCode = this.createIframe();
-			this.domContainer.insertAdjacentHTML("beforeend", iframeCode);
+			const iframeEl = this.createIframe();
+			this.domContainer.appendChild(iframeEl);
 			this.domContainer.classList.add(this.config.activeIframeClass);
 			this.isIframeLoaded = true;
 
@@ -465,6 +539,10 @@ class EmbedYouTube extends HTMLElement {
 	 */
 	setPoster() {
 
+		// pulizia
+		this.domPosterContainer.querySelector("#img-webp")?.remove();
+		this.domPosterContainer.querySelector("#img-jpg")?.remove();
+
 		// url immagini webp e jpg da scaricare
 		const webpUrl = `https://i.ytimg.com/vi_webp/${this.videoId}/${this.posterQuality}.webp`;
 		const jpgUrl = `https://i.ytimg.com/vi/${this.videoId}/${this.posterQuality}.jpg`;
@@ -526,7 +604,7 @@ class EmbedYouTube extends HTMLElement {
 		// se viene cambiato l'attributo videoid allora prendo il valore prima del cambiamento
 		// se viene cambiato un attributo che non è videoid allora prendo il valore presente nel codice
 		// questo si è reso necessario perchè viene usato requestAnimationFrame che accorpa tutte le modifiche in una volta sola
-		const videoId = attrname === "video-id" ? oldvalue : this.videoId;
+		const videoId = attrname === "video-id" ? encodeURIComponent(normalizeVideoId(oldvalue || "")) : this.videoId;
 
 		// cancello eventuali json. lo faccio sempre perchè non so quale attributo possa essere cambiato. in ogni caso viene richiamata la setup che lo riscrive
 		if (this.noSchema === false && this.querySelector(`#json-${videoId}`)) {
@@ -555,8 +633,7 @@ class EmbedYouTube extends HTMLElement {
 	disconnectedCallback() {
 
 		this.constructor?.instanceList.delete(this);
-		this.observerIframe?.disconnect();
-		this.observerVideo?.disconnect();
+		this.cleanupObservers();
 	}
 }
 
